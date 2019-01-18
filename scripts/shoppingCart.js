@@ -18,7 +18,8 @@ const displayShoppingCart = () => {
                 currency: "USD"
             })}</div>
 
-            <button id="${idx}" class="cart_removeButton">Remove</button>
+            <button id="removeAll${idx}" class="cart_removeAllButton">Remove</button>
+            <button id="removeOne${idx}" class="cart_removeOneButton">-</button>
             </section>
             `
 
@@ -33,12 +34,12 @@ const displayShoppingCart = () => {
     })}</h3>
     `
 
-    // Get a reference to all remove buttons
-    const allRemoveButtons = document.querySelectorAll(".cart_removeButton")
+    const allRemoveAllButtons = document.querySelectorAll(".cart_removeAllButton")
+    const allRemoveOneButtons = document.querySelectorAll(".cart_removeOneButton")
 
     // Add a click event listener to each button
-    for (const button of allRemoveButtons) {
-        button.addEventListener(
+    for (const allbutton of allRemoveAllButtons) {
+        allbutton.addEventListener(
             "click",
             (event) => {
                 const indexToRemove = parseInt(event.target.id)
@@ -48,18 +49,13 @@ const displayShoppingCart = () => {
         )
 
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    for (const onebutton of allRemoveOneButtons) {
+        onebutton.addEventListener(
+            "click",
+            (event) => {
+                let prodIndex = event.target.id.replace("removeOne", "")
+                shoppingCart[prodIndex].qty--
+                displayShoppingCart()
+            }
+        )
+        }}
