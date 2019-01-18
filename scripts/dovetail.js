@@ -4,28 +4,23 @@
 */
 const createProductHTML = product => `
     <section class="product">
-        <header class="product__header">
-            <h2>${product.name}</h2>
-        </header>
+      <header class="product__header">
+        <h2>${product.name}</h2>
+      </header>
 
-        <p class="product__description">
+      <p class="product__description">
         ${product.description}
-        </p>
+      </p>
 
-        <p class="container--product__image center">
-            <img class="product__image" src="./images/${product.image}" />
-        </p>
+      <footer class="product__footer">
+        Price: ${product.price.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
+        })}
 
-        <footer class="product__footer">
-            <div class="product__price">
-                Price: ${product.price.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD"
-                })}
-            </div>
+        <button id="${product.id}" class="product__purchaseButton">Purchase</button>
+      </footer>
 
-            <button id="${product.id}" class="button button--purchase">Purchase</button>
-        </footer>
     </section>
 `
 
@@ -44,7 +39,7 @@ for (product of products) {
 }
 
 // Get a reference to all purchase buttons
-const allButtons = document.querySelectorAll(".button--purchase")
+const allButtons = document.querySelectorAll(".product__purchaseButton")
 
 // Add a click event listener to each button
 for (button of allButtons) {
@@ -53,19 +48,42 @@ for (button of allButtons) {
         (event) => {
             // Find the product whose `id` property is equal to
             // the "id" attribute of the button that was clicked on
-            const product = products.find(p => parseInt(event.target.id) === p.id)
-
+            const foundProduct = products.find((product) => {
+                return parseInt(event.target.id) === product.id
+            })
+            
             // Only if something was found, add the object to the
             // shopping cart array
-            const itemInCart = isProductInCart(product.id)
-            if (!itemInCart) {
-                shoppingCart.push(Object.assign({quantity: 1}, product))
-            } else {
-                itemInCart.quantity++
+            if (foundProduct !== null) {
+            
+                
+                // Find product in cart whose 'id' property is equal to
+                // the 'id' attribute of the button that was clicked on
+                let inCart = shoppingCart.find((product) => {
+                    return parseInt(event.target.id) === product.id
+                })
+                
+    
+                if (inCart) {
+                    inCart.qty++
+                    let quantityPrice = inCart.qty * inCart.price
+
+                    displayShoppingCart()
+                    return quantityPrice
+                }
+            
+            
+                else {
+                    foundProduct.qty = 1
+                    shoppingCart.push(foundProduct)
+                displayShoppingCart()
             }
-            displayShoppingCart()
+            
+
         }
+    }
     )
+
 }
 
 
